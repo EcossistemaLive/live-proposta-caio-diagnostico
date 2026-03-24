@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico MAPCA — Freitas Uniformes | Live Consultoria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --live-bg: #06192a;
+    --live-surface: rgba(255, 255, 255, 0.04);
+    --live-border: rgba(255, 255, 255, 0.08);
+    --live-neon: #00e800;
+    --live-neon-dim: rgba(0, 232, 0, 0.12);
+    --live-text: #ffffff;
+    --live-muted: #94a3b8;
+    --live-danger: #ff4d4d;
+    --live-warn: #f59e0b;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-body);
+    background-color: var(--live-bg);
+    color: var(--live-text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 { font-family: var(--font-display); color: #fff; letter-spacing: -0.02em; }
+  h1 { font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 700; line-height: 1.1; margin-bottom: 24px; }
+  h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); margin-bottom: 28px; font-weight: 500; }
+  h3 { font-size: 1.3rem; font-weight: 500; margin-bottom: 14px; }
+  h4 { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--live-muted); margin-bottom: 10px; }
+  p { font-size: 1.05rem; color: var(--live-muted); margin-bottom: 18px; font-weight: 300; }
+  strong { color: var(--live-text); font-weight: 500; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+  section { margin-bottom: 100px; position: relative; }
+
+  .logo { width: 130px; margin-bottom: 56px; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--live-neon-dim); color: var(--live-neon);
+    padding: 6px 14px; border-radius: 100px;
+    font-size: 0.8rem; font-weight: 700; font-family: var(--font-display);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 22px;
+    border: 1px solid rgba(0, 232, 0, 0.25);
+  }
+  .badge.danger { background: rgba(255,77,77,0.1); color: var(--live-danger); border-color: rgba(255,77,77,0.25); }
+  .badge.warn { background: rgba(245,158,11,0.1); color: var(--live-warn); border-color: rgba(245,158,11,0.25); }
+  .badge.neutral { background: rgba(255,255,255,0.05); color: #fff; border-color: rgba(255,255,255,0.1); }
+
+  .glass-panel {
+    background: var(--live-surface);
+    border: 1px solid var(--live-border);
+    border-radius: 16px;
+    padding: 36px 32px;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr; gap: 28px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr; gap: 20px; }
+  .grid-5 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media(min-width: 700px) {
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-5 { grid-template-columns: repeat(5, 1fr); }
+  }
+  @media(min-width: 900px) {
+    .grid-2 { grid-template-columns: 1.2fr 0.8fr; align-items: start; }
+    .grid-2.reverse { grid-template-columns: 0.8fr 1.2fr; }
+    .grid-2.equal { grid-template-columns: 1fr 1fr; }
+    .hero-content { padding-right: 40px; }
+  }
+
+  .floating-card {
+    background: linear-gradient(145deg, rgba(10,20,35,0.85), rgba(5,10,18,0.95));
+    border: 1px solid rgba(0, 232, 0, 0.2);
+    border-left: 4px solid var(--live-neon);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.5);
+    animation: float 7s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0px); }
+    50% { transform: translateY(-14px); }
+  }
+  .stat-value { font-family: var(--font-display); font-size: 2.6rem; color: var(--live-neon); font-weight: 700; line-height: 1; margin-bottom: 6px; }
+  .stat-label { color: var(--live-muted); font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; }
+
+  .mapca-pill {
+    display: flex; align-items: center; gap: 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--live-border);
+    border-radius: 12px;
+    padding: 20px 24px;
+  }
+  .mapca-letter {
+    font-family: var(--font-display);
+    font-size: 2.5rem; font-weight: 700; color: var(--live-neon);
+    line-height: 1; min-width: 48px; text-align: center;
+  }
+  .mapca-info h4 { color: #fff; margin-bottom: 4px; font-size: 0.95rem; text-transform: none; letter-spacing: 0; }
+  .mapca-info p { font-size: 0.85rem; margin: 0; }
+
+  .insight-card {
+    border-radius: 12px;
+    padding: 24px;
+    border-left: 3px solid;
+  }
+  .insight-card.red { background: rgba(255,77,77,0.06); border-color: var(--live-danger); }
+  .insight-card.green { background: rgba(0,232,0,0.06); border-color: var(--live-neon); }
+  .insight-card.yellow { background: rgba(245,158,11,0.06); border-color: var(--live-warn); }
+  .insight-card.blue { background: rgba(59,130,246,0.06); border-color: #3b82f6; }
+  .insight-card h3 { font-size: 1.1rem; margin-bottom: 10px; }
+
+  .icon-row {
+    display: flex; align-items: flex-start; gap: 14px;
+    margin-bottom: 20px;
+  }
+  .icon-row svg { flex-shrink: 0; margin-top: 3px; }
+
+  .timeline { position: relative; padding-left: 28px; border-left: 1px dashed var(--live-border); }
+  .timeline-item { position: relative; margin-bottom: 36px; }
+  .timeline-item::before {
+    content: ''; position: absolute; left: -34px; top: 4px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--live-bg); border: 2px solid var(--live-neon);
+    box-shadow: 0 0 8px var(--live-neon);
+  }
+  .timeline-title { font-size: 1.1rem; color: #fff; margin-bottom: 6px; font-family: var(--font-display); font-weight: 500; }
+  .timeline-tag {
+    display: inline-block; font-size: 0.75rem; font-weight: 700;
+    color: var(--live-neon); background: var(--live-neon-dim);
+    border: 1px solid rgba(0,232,0,0.2); border-radius: 100px;
+    padding: 2px 10px; margin-bottom: 8px; letter-spacing: 0.04em;
+    font-family: var(--font-display);
+  }
+
+  .progress-bar { background: rgba(255,255,255,0.08); border-radius: 100px; height: 8px; margin-top: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 100px; background: var(--live-neon); }
+  .progress-fill.warn { background: var(--live-warn); }
+  .progress-fill.danger { background: var(--live-danger); }
+
+  .metric-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--live-border);
+  }
+  .metric-row:last-child { border-bottom: none; }
+  .metric-label { color: var(--live-muted); font-size: 0.95rem; }
+  .metric-value { font-family: var(--font-display); font-weight: 700; font-size: 1rem; }
+
+  .quote-block {
+    border-left: 3px solid var(--live-neon);
+    padding: 18px 24px;
+    background: rgba(0,232,0,0.04);
+    border-radius: 0 12px 12px 0;
+    margin: 24px 0;
+    font-style: italic;
+    color: rgba(255,255,255,0.8);
+    font-size: 1rem;
+  }
+  .quote-author { font-size: 0.8rem; color: var(--live-muted); font-style: normal; margin-top: 8px; margin-bottom: 0; }
+
+  .pricing-box {
+    text-align: center; padding: 56px 40px;
+    background: radial-gradient(circle at top, rgba(0, 232, 0, 0.07) 0%, transparent 65%), var(--live-surface);
+    border: 1px solid var(--live-border); border-top: 1px solid rgba(0, 232, 0, 0.3);
+    border-radius: 28px;
+  }
+  .price { font-family: var(--font-display); font-size: 3.8rem; color: #fff; font-weight: 700; margin: 20px 0 6px; line-height: 1; }
+  .price span { font-size: 1.4rem; color: var(--live-neon); position: relative; top: -1.4rem; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    font-family: var(--font-display); font-weight: 700; font-size: 1rem;
+    padding: 14px 32px; border-radius: 12px;
+    text-decoration: none; cursor: pointer;
+    border: 1px solid var(--live-border);
+    transition: all 0.25s ease;
+    color: var(--live-text); background: transparent;
+  }
+  .btn-primary {
+    background: var(--live-neon); color: #000; border: none;
+    box-shadow: 0 0 20px rgba(0,232,0,0.2);
+  }
+  .btn-primary:hover { background: #00ff00; box-shadow: 0 0 30px rgba(0,232,0,0.4); transform: translateY(-2px); }
+
+  .risk-meter {
+    display: flex; align-items: center; gap: 6px;
+    margin-top: 6px;
+  }
+  .risk-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+  }
+  .risk-dot.active-red { background: var(--live-danger); box-shadow: 0 0 6px var(--live-danger); }
+  .risk-dot.active-yellow { background: var(--live-warn); box-shadow: 0 0 6px var(--live-warn); }
+  .risk-dot.active-green { background: var(--live-neon); box-shadow: 0 0 6px var(--live-neon); }
+
+  footer {
+    text-align: center; padding: 56px 24px;
+    border-top: 1px solid var(--live-border);
+    margin-top: 60px;
+  }
+
+  .fade-up { opacity: 0; transform: translateY(28px); animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards; }
+  .delay-1 { animation-delay: 0.15s; }
+  .delay-2 { animation-delay: 0.3s; }
+  .delay-3 { animation-delay: 0.45s; }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 700px) {
+    .container { padding: 24px 16px; }
+    section { margin-bottom: 64px; }
+    .pricing-box { padding: 36px 20px; }
+    .glass-panel { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HERO -->
+  <section class="fade-up">
+    <img src="https://raw.githubusercontent.com/Clebito2/layout/main/Logo%20live%20oficial-36.png" class="logo" alt="Live Consultoria">
+    <div class="grid-2">
+      <div class="hero-content">
+        <div class="badge">DIAGNÓSTICO EXECUTIVO · MAPCA</div>
+        <h1>Uma Fábrica de Alta Performance Refém do Fundador</h1>
+        <p>Diagnóstico consolidado a partir de <strong>3 sessões de imersão</strong> com o fundador Sr. Caio, Sra. Wanda e a sucessora Lani — revelando o real estado da operação, do financeiro e do modelo comercial.</p>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 32px;">
+          <div class="badge neutral">Confecção de Uniformes</div>
+          <div class="badge neutral">Itumbiara — GO</div>
+          <div class="badge neutral">+20 Anos de Mercado</div>
+        </div>
+      </div>
+
+      <div class="floating-card delay-1 fade-up">
+        <div class="stat-value">3</div>
+        <p class="stat-label" style="color: #fff; margin-bottom: 20px;">Reuniões de Diagnóstico Profundo</p>
+        <hr style="border-color: var(--live-border); margin: 0 0 20px;">
+        <div class="stat-value" style="font-size: 2rem; color: var(--live-warn);">5</div>
+        <p class="stat-label" style="margin-bottom: 20px;">Dimensões Analisadas pelo MAPCA</p>
+        <hr style="border-color: var(--live-border); margin: 0 0 20px;">
+        <div class="stat-value" style="font-size: 2rem; color: var(--live-danger);">1</div>
+        <p class="stat-label">Ponto Único de Falha Crítico</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTEXTO -->
+  <section class="fade-up delay-2">
+    <div class="glass-panel">
+      <div class="badge neutral">Contexto da Análise</div>
+      <h2>Uma Empresa com Excelência Técnica e Gargalo Estrutural</h2>
+      <div class="grid-2 equal" style="gap: 48px; align-items: start;">
+        <div>
+          <p>A empresa foi fundada pelo Sr. Caio após anos de relacionamento comercial que identificaram uma oportunidade no setor têxtil. Cresceu organicamente, investindo em tecnologia de ponta — bordado (primeira máquina de bordar de Itumbiara), serigrafia própria, software Audaces para modelagem e, recentemente, automação de máquinas de costura.</p>
+          <p>O resultado é uma estrutura industrial admirável para o porte da empresa, com clientes de referência como o <strong>Grupo Jales Machado</strong> (20+ anos de relacionamento), distribuidoras da Ambev e usinas de açúcar e álcool de GO, MG e MT.</p>
+          <div class="quote-block">
+            "A empresa tem cliente, a empresa tem reconhecimento, a empresa tem potencial de produtividade. Ou a gente organiza enquanto é tempo, ou esquece."
+            <p class="quote-author">— Lani, filha do fundador e futura sucessora</p>
+          </div>
+        </div>
+        <div>
+          <h4>Clientes Estratégicos Identificados</h4>
+          <div class="metric-row">
+            <span class="metric-label">Grupo Jales Machado</span>
+            <span class="metric-value" style="color: var(--live-neon);">20+ anos</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Distribuidoras Regra (Zambébi GO)</span>
+            <span class="metric-value" style="color: var(--live-warn);">Volume reduzido</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Grupo Lima — Rio Verde/Barreiras</span>
+            <span class="metric-value" style="color: var(--live-neon);">Ativo</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Grupo Vias — Mato Grosso</span>
+            <span class="metric-value" style="color: var(--live-neon);">Novo · Crescendo</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Usina Goianésia / Vitória MG</span>
+            <span class="metric-value" style="color: var(--live-neon);">Fixo</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Catálogo Ambev (referência)</span>
+            <span class="metric-value" style="color: var(--live-neon);">Indicação</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Usina Campestre — MT (prospecto)</span>
+            <span class="metric-value" style="color: var(--live-warn);">Em negociação</span>
+          </div>
+          <div style="margin-top: 24px;">
+            <h4>Faturamento Anual Estimado</h4>
+            <div class="stat-value" style="font-size: 2.2rem; margin-top: 8px;">R$ 350–400k</div>
+            <p style="font-size: 0.85rem; margin-top: 4px;">2024 — pressão por volume reduzido do principal distribuidor</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- O MÉTODO MAPCA -->
+  <section class="fade-up">
+    <div class="badge">Metodologia</div>
+    <h2>O Método MAPCA de Diagnóstico</h2>
+    <p style="max-width: 680px;">Cinco dimensões que constroem um retrato completo da empresa — de dentro para fora. O resultado é um plano de ação cirúrgico, sem desperdício de recurso nem de tempo.</p>
+    <div class="grid-5" style="margin-top: 40px;">
+      <div class="mapca-pill">
+        <div class="mapca-letter">M</div>
+        <div class="mapca-info">
+          <h4>Mapa de Processos</h4>
+          <p>Como o trabalho flui hoje (AS-IS) e como deve fluir (TO-BE)</p>
+        </div>
+      </div>
+      <div class="mapca-pill">
+        <div class="mapca-letter">A</div>
+        <div class="mapca-info">
+          <h4>Análise de Capacidade</h4>
+          <p>Máquinas, pessoas e o gap entre o que existe e o que é usado</p>
+        </div>
+      </div>
+      <div class="mapca-pill">
+        <div class="mapca-letter">P</div>
+        <div class="mapca-info">
+          <h4>Posicionamento Comercial</h4>
+          <p>Clientes, concorrência e o potencial de crescimento bloqueado</p>
+        </div>
+      </div>
+      <div class="mapca-pill">
+        <div class="mapca-letter">C</div>
+        <div class="mapca-info">
+          <h4>Cenário Financeiro</h4>
+          <p>Fluxo de caixa real, endividamento e pressão no curto prazo</p>
+        </div>
+      </div>
+      <div class="mapca-pill">
+        <div class="mapca-letter">A</div>
+        <div class="mapca-info">
+          <h4>Ação Prioritária</h4>
+          <p>Roadmap sequenciado de impacto imediato a longo prazo</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- M: MAPA DE PROCESSOS -->
+  <section class="fade-up">
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 28px;">
+      <div style="font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--live-neon); line-height: 1; opacity: 0.3;">M</div>
+      <div>
+        <div class="badge">Dimensão 1</div>
+        <h2 style="margin-bottom: 0;">Mapa de Processos</h2>
+      </div>
+    </div>
+
+    <div class="grid-2 equal" style="gap: 24px; align-items: start;">
+      <div>
+        <div class="insight-card red" style="margin-bottom: 20px;">
+          <h3 style="color: var(--live-danger);">Expedição Cega — Risco Imediato</h3>
+          <p>A expedição opera por contagem manual. Em uma entrega recente ao Grupo Jales Machado, uma peça extra passou inadvertidamente, gerando um incidente que chegou à diretoria do cliente. Com zero rastreabilidade de produto na saída, o risco de recorrência é total.</p>
+          <div class="quote-block" style="margin-top: 16px;">
+            "Nós não temos como mandar uma nota de devolução porque na nota está correto. Físico passou. Como que vai fazer agora?"
+            <p class="quote-author">— Sr. Caio, fundador</p>
+          </div>
+        </div>
+        <div class="insight-card yellow">
+          <h3 style="color: var(--live-warn);">ERP Subutilizado e Obsoleto</h3>
+          <p>O sistema <strong>LINX</strong> (antiga Millennium) está instalado desde 2002 em uma versão Linux muito antiga. O contrato de manutenção está ativo, porém funcionalidades básicas — como geração de <strong>etiquetas com código de barras</strong> — não foram configuradas. O software Audaces (R$1.200/mês) também é subutilizado.</p>
+          <p style="margin-bottom: 0;">O processo de emissão de NF para o Grupo Jales Machado exige campos específicos de "item" que demandaram adaptação manual no sistema — evidenciando a falta de um gestor de TI dedicado desde a saída do filho mais velho.</p>
+        </div>
+      </div>
+      <div>
+        <div class="insight-card green" style="margin-bottom: 20px;">
+          <h3 style="color: var(--live-neon);">Pontos Fortes do Processo Produtivo</h3>
+          <div class="icon-row">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#00e800"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <p style="margin: 0;">Modelagem e risco via Audaces — software de exportação, usado por grandes marcas</p>
+          </div>
+          <div class="icon-row">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#00e800"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <p style="margin: 0;">Bordado in-house — primeira máquina de bordado de Itumbiara (desde 2001)</p>
+          </div>
+          <div class="icon-row">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#00e800"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <p style="margin: 0;">Serigrafia in-house — eliminação da terceirização e controle de qualidade total</p>
+          </div>
+          <div class="icon-row">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#00e800"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <p style="margin: 0;">Qualidade rigorosa: fundador percorre o chão de fábrica e identifica defeitos mínimos pessoalmente</p>
+          </div>
+          <div class="icon-row">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#00e800"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <p style="margin: 0;">Faccão especializada para fechamentos específicos, com peças já preparadas internamente</p>
+          </div>
+        </div>
+        <div class="insight-card blue">
+          <h3 style="color: #60a5fa;">Oportunidade Processual</h3>
+          <p style="margin-bottom: 0;">Implantação de leitora de código de barras ou RFID na expedição. O SR. Caio já possui uma máquina que identifica modelos por código — a infraestrutura existe. O que falta é a <strong>integração com o ERP e o processo</strong> de bipagem antes do despacho. Custo técnico baixo, impacto na confiabilidade com clientes: imediato.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- A: ANÁLISE DE CAPACIDADE -->
+  <section class="fade-up">
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 28px;">
+      <div style="font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--live-neon); line-height: 1; opacity: 0.3;">A</div>
+      <div>
+        <div class="badge">Dimensão 2</div>
+        <h2 style="margin-bottom: 0;">Análise de Capacidade</h2>
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-bottom: 32px;">
+      <div class="glass-panel">
+        <h4>Capacidade Produtiva</h4>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin: 12px 0 6px;">
+          <span style="color: var(--live-muted); font-size: 0.9rem;">Utilização atual estimada</span>
+          <strong style="color: var(--live-warn);">~60%</strong>
+        </div>
+        <div class="progress-bar"><div class="progress-fill warn" style="width: 60%;"></div></div>
+        <p style="font-size: 0.85rem; margin-top: 14px; margin-bottom: 0;">Máquinas de última geração trabalhando abaixo do potencial por falta de carteira comercial estruturada. Uma máquina de bolso produz 5 peças/min — operada por quem apertava o botão "porque era a pessoa que estava lá".</p>
+      </div>
+      <div class="glass-panel">
+        <h4>Capacidade de RH</h4>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin: 12px 0 6px;">
+          <span style="color: var(--live-muted); font-size: 0.9rem;">Tempo médio até produtividade</span>
+          <strong style="color: var(--live-warn);">6 meses</strong>
+        </div>
+        <div class="progress-bar"><div class="progress-fill warn" style="width: 70%;"></div></div>
+        <p style="font-size: 0.85rem; margin-top: 14px; margin-bottom: 0;">Cidade pequena sem SENAI ou SEBRAE para o segmento. Treinamento 100% interno. Funcionárias mais recentes atingiram boa produção em 4 meses — sinal de que o processo de onboarding está melhorando.</p>
+      </div>
+      <div class="glass-panel">
+        <h4>Capacidade Tecnológica</h4>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin: 12px 0 6px;">
+          <span style="color: var(--live-muted); font-size: 0.9rem;">Aproveitamento do ERP/Audaces</span>
+          <strong style="color: var(--live-danger);">~25%</strong>
+        </div>
+        <div class="progress-bar"><div class="progress-fill danger" style="width: 25%;"></div></div>
+        <p style="font-size: 0.85rem; margin-top: 14px; margin-bottom: 0;">Sistemas robustos pagos mensalmente com funcionalidades críticas desativadas. O LINX possui módulo de produção, ordens de compra e bipagem — nenhum deles em uso.</p>
+      </div>
+    </div>
+
+    <div class="glass-panel">
+      <h3>Inventário de Capacidade Tecnológica</h3>
+      <div class="grid-2 equal" style="gap: 32px; margin-top: 16px; align-items: start;">
+        <div>
+          <h4>Ativos Instalados</h4>
+          <div class="metric-row">
+            <span class="metric-label">ERP LINX (ex-Millennium)</span>
+            <span class="metric-value" style="color: var(--live-warn);">Subutilizado</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Audaces — Modelagem e Risco</span>
+            <span class="metric-value" style="color: var(--live-warn);">Parcialmente usado</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Máquina de Bordado Industrial</span>
+            <span class="metric-value" style="color: var(--live-neon);">Ativo</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Máquina de Bolso Automatizada</span>
+            <span class="metric-value" style="color: var(--live-neon);">Ativo</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Serigrafia própria</span>
+            <span class="metric-value" style="color: var(--live-neon);">Ativo</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Leitora de código por modelo</span>
+            <span class="metric-value" style="color: var(--live-warn);">Sem integração ERP</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Bipagem na expedição</span>
+            <span class="metric-value" style="color: var(--live-danger);">Inexistente</span>
+          </div>
+        </div>
+        <div>
+          <h4>Conclusão de Capacidade</h4>
+          <p>A empresa já fez os investimentos. <strong>Não precisa comprar mais tecnologia</strong> — precisa usar o que tem. O gap entre o ativo instalado e o ativo utilizado é o maior gerador de retorno imediato disponível.</p>
+          <div class="quote-block">
+            "Tem muita ferramenta lá que a gente praticamente não usa porque eu me implantei, eu não tenho pessoas para fazer isso."
+            <p class="quote-author">— Sr. Caio</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- P: POSICIONAMENTO COMERCIAL -->
+  <section class="fade-up">
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 28px;">
+      <div style="font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--live-neon); line-height: 1; opacity: 0.3;">P</div>
+      <div>
+        <div class="badge">Dimensão 3</div>
+        <h2 style="margin-bottom: 0;">Posicionamento Comercial</h2>
+      </div>
+    </div>
+
+    <div class="grid-2 equal" style="gap: 24px; align-items: start;">
+      <div>
+        <div class="insight-card red" style="margin-bottom: 20px;">
+          <h3 style="color: var(--live-danger);">Funil Comercial de Uma Pessoa</h3>
+          <p>100% do esforço comercial está concentrado no Sr. Caio. A representante de Goiânia adoeceu e nunca foi substituída. Resultado: carteira estagnada em clientes fixos enquanto a capacidade de produção cresce.</p>
+          <div style="margin-top: 16px;">
+            <h4>Risco de Concentração de Clientes</h4>
+            <div class="metric-row">
+              <span class="metric-label">Jales Machado</span>
+              <div>
+                <div class="risk-meter">
+                  <div class="risk-dot active-red"></div>
+                  <div class="risk-dot active-red"></div>
+                  <div class="risk-dot active-red"></div>
+                  <div class="risk-dot active-red"></div>
+                  <div class="risk-dot active-red"></div>
+                </div>
+                <span style="font-size: 0.75rem; color: var(--live-danger);">Risco crítico — concorrente de BH já sendo avaliado</span>
+              </div>
+            </div>
+            <div class="metric-row">
+              <span class="metric-label">Distribuidoras Regra</span>
+              <div>
+                <div class="risk-meter">
+                  <div class="risk-dot active-red"></div>
+                  <div class="risk-dot active-red"></div>
+                  <div class="risk-dot active-red"></div>
+                  <div class="risk-dot active-yellow"></div>
+                  <div class="risk-dot"></div>
+                </div>
+                <span style="font-size: 0.75rem; color: var(--live-warn);">Redução de 30–50% nos pedidos em 2024</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="insight-card green">
+          <h3 style="color: var(--live-neon);">Oportunidades Identificadas</h3>
+          <div class="icon-row" style="margin-bottom: 14px;">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#00e800"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            <p style="margin: 0;"><strong>Mato Grosso:</strong> Grupo Vias e Usina Campestre — entrando agora, com produto de qualidade superior ao WW Uniforme (concorrente com histórico de falhas)</p>
+          </div>
+          <div class="icon-row" style="margin-bottom: 14px;">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#00e800"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            <p style="margin: 0;"><strong>Ambev:</strong> Presença no catálogo como referência de fornecedor — porta de entrada para novos distribuidores nacionais</p>
+          </div>
+          <div class="icon-row">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#00e800"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            <p style="margin: 0;"><strong>Certificação CA/Inmetro:</strong> Habilita acesso ao mercado de EPIs — segmento de ticket maior e contratos recorrentes industriais</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="glass-panel" style="margin-bottom: 20px;">
+          <h4>Análise Competitiva Local</h4>
+          <p style="font-size: 0.9rem; margin-bottom: 20px;">Dois concorrentes diretos em Itumbiara. Ambos operam com salário mínimo na carteira + produção variável, criando pressão e insatisfação dos funcionários. Este é o diferencial de retenção que a empresa tem e precisa manter.</p>
+          <div class="metric-row">
+            <span class="metric-label">Salário base</span>
+            <span class="metric-value" style="color: var(--live-neon);">Piso da categoria</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Variável de produção</span>
+            <span class="metric-value" style="color: var(--live-neon);">Bônus (não incorpora)</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Clima organizacional</span>
+            <span class="metric-value" style="color: var(--live-neon);">Melhor que concorrentes</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Qualidade do produto</span>
+            <span class="metric-value" style="color: var(--live-neon);">Diferencial reconhecido</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Prazo de entrega</span>
+            <span class="metric-value" style="color: var(--live-danger);">Gargalo histórico</span>
+          </div>
+        </div>
+        <div class="insight-card yellow">
+          <h3 style="color: var(--live-warn);">Clientes Perdidos por Prazo</h3>
+          <p style="margin-bottom: 0;">A empresa já perdeu clientes grandes no passado. <strong>Não por qualidade</strong> — o produto é reconhecido como de exportação. Mas por atrasos e desorganização logística. O mesmo padrão pode se repetir agora com Jales Machado se o processo de expedição não for corrigido imediatamente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- C: CENÁRIO FINANCEIRO -->
+  <section class="fade-up">
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 28px;">
+      <div style="font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--live-neon); line-height: 1; opacity: 0.3;">C</div>
+      <div>
+        <div class="badge danger">Atenção Máxima</div>
+        <h2 style="margin-bottom: 0;">Cenário Financeiro</h2>
+      </div>
+    </div>
+
+    <div class="grid-2 equal" style="gap: 24px; align-items: start;">
+      <div>
+        <div class="insight-card red" style="margin-bottom: 20px;">
+          <h3 style="color: var(--live-danger);">Faturamento Engolido pelo Serviço da Dívida</h3>
+          <p>Os últimos 2–3 anos concentraram múltiplos investimentos: <strong>novo parque de máquinas automatizadas, reforma completa do telhado (R$200k), climatizadores, reforma da área de serigrafia</strong> e construção de área de lazer + residência para o fundador no andar superior.</p>
+          <p>Os financiamentos envolvem: Santander (FGI), Caixa Econômica (FGI + PRONANTO), além de recursos próprios. O comprometimento mensal está alto em um período em que o principal distribuidor (Regra/Zambébi) reduziu os pedidos significativamente.</p>
+          <div class="quote-block">
+            "Você investindo e o faturamento está aqui. R$ 350 mil a R$ 400 mil no ano passado. Menos do que em 2024. E eu gastando muito em 2025."
+            <p class="quote-author">— Sr. Caio</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="glass-panel" style="margin-bottom: 20px;">
+          <h4>Mapa de Riscos Financeiros</h4>
+          <div class="metric-row">
+            <span class="metric-label">Financiamentos de máquinas</span>
+            <span class="metric-value" style="color: var(--live-danger);">Alto · Em aberto</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Reforma estrutural (telhado + obra)</span>
+            <span class="metric-value" style="color: var(--live-warn);">Parcialmente quitado</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Audaces (R$1.200/mês)</span>
+            <span class="metric-value" style="color: var(--live-warn);">Custo vs uso desequilibrado</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">ERP LINX (manutenção)</span>
+            <span class="metric-value" style="color: var(--live-warn);">Pago, mas subutilizado</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Capacidade ociosa produtiva</span>
+            <span class="metric-value" style="color: var(--live-danger);">~40% sem pedidos</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Gestão financeira ativa</span>
+            <span class="metric-value" style="color: var(--live-danger);">Informal · Centralizada</span>
+          </div>
+        </div>
+        <div class="insight-card green">
+          <h3 style="color: var(--live-neon);">A Saída Está na Capacidade Ociosa</h3>
+          <p style="margin-bottom: 0;">Não é necessário mais investimento. A solução financeira é <strong>ocupar a capacidade existente com novos clientes</strong>. O mesmo faturamento gerado com 60% da capacidade, se expandido para 85–90%, pode dobrar a margem de contribuição sem aumentar custos fixos proporcionalmente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- A: AÇÃO PRIORITÁRIA -->
+  <section class="fade-up">
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 28px;">
+      <div style="font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--live-neon); line-height: 1; opacity: 0.3;">A</div>
+      <div>
+        <div class="badge">Dimensão 5</div>
+        <h2 style="margin-bottom: 0;">Ação Prioritária — Roadmap de 6 Meses</h2>
+      </div>
+    </div>
+
+    <div class="grid-2" style="align-items: start;">
+      <div>
+        <p style="font-size: 1.15rem; margin-bottom: 32px;">As ações foram sequenciadas para <strong>aliviar o caixa e o fundador o mais rápido possível</strong>, atacando as emergências antes de construir a estrutura de longo prazo.</p>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-tag">Mês 1 · Emergência</div>
+            <div class="timeline-title">Governança de Emergência e Raio-X Financeiro</div>
+            <p>Instalação da bipagem na expedição (elimina risco imediato com Jales Machado). DRE estruturado, fluxo de caixa real e cronograma das dívidas. Diagnóstico do LINX: identificar o que já está disponível e não está ativado.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-tag">Mês 2–3 · Estruturação</div>
+            <div class="timeline-title">Integração do ERP e Processos Padronizados</div>
+            <p>Destravamento das funcionalidades do LINX: etiquetas, ordens de produção, controle de estoque de tecido. Fluxogramas do processo produtivo do pedido até a expedição. Indicadores básicos (produção por operária, prazo de entrega, giro de estoque).</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-tag">Mês 4 · Comercial</div>
+            <div class="timeline-title">Estrutura Comercial B2B Industrial</div>
+            <p>Funil de vendas com CRM básico. Recrutamento de representante para Goiânia e prospecção no Centro-Oeste. Playbook de atendimento e proposta comercial padronizados. Proposta de contrato para Grupo Vias e Usina Campestre.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-tag">Mês 5–6 · Legado</div>
+            <div class="timeline-title">Certificação CA e Plano de Sucessão</div>
+            <p>Checklist preparatório para certificação CA/Inmetro sem depender de pacotes caros das certificadoras. Manual de processos para operação sem dependência do fundador. Formalização do papel da sucessora Lani com governança definida.</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="glass-panel" style="margin-bottom: 24px;">
+          <h3>Entregas por Fase</h3>
+          <div class="metric-row">
+            <span class="metric-label">Bipagem na expedição</span>
+            <span class="metric-value" style="color: var(--live-neon);">Mês 1</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">DRE + Fluxo de Caixa</span>
+            <span class="metric-value" style="color: var(--live-neon);">Mês 1</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">LINX: etiqueta e ordens de produção</span>
+            <span class="metric-value" style="color: var(--live-neon);">Mês 2</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Fluxograma AS-IS e TO-BE</span>
+            <span class="metric-value" style="color: var(--live-neon);">Mês 2–3</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Dashboard de indicadores</span>
+            <span class="metric-value" style="color: var(--live-neon);">Mês 3</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">CRM + Representante contratado</span>
+            <span class="metric-value" style="color: var(--live-neon);">Mês 4</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Checklist CA/Inmetro</span>
+            <span class="metric-value" style="color: var(--live-neon);">Mês 5</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Manual de Processos + Plano de Sucessão</span>
+            <span class="metric-value" style="color: var(--live-neon);">Mês 6</span>
+          </div>
+        </div>
+
+        <div class="insight-card green">
+          <h3 style="color: var(--live-neon);">Resultado Esperado ao Final do Projeto</h3>
+          <div class="icon-row" style="margin-bottom: 12px;">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#00e800"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <p style="margin: 0;">Expedição com rastreabilidade total — zero erros de remessa</p>
+          </div>
+          <div class="icon-row" style="margin-bottom: 12px;">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#00e800"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <p style="margin: 0;">ERP gerando relatórios para decisão — sem planilha mental</p>
+          </div>
+          <div class="icon-row" style="margin-bottom: 12px;">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#00e800"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <p style="margin: 0;">Estrutura comercial ativa sem depender exclusivamente do fundador</p>
+          </div>
+          <div class="icon-row" style="margin-bottom: 12px;">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#00e800"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <p style="margin: 0;">Capacidade ociosa sendo convertida em faturamento</p>
+          </div>
+          <div class="icon-row">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#00e800"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <p style="margin: 0;">Fundador com agenda de CEO — não de operador — e plano de sucessão documentado</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVESTIMENTO -->
+  <section id="investimento" class="fade-up">
+    <div class="pricing-box">
+      <div class="badge" style="margin-bottom: 16px;">ESCOPO COMPLETO · 6 MESES</div>
+      <h2 style="margin-bottom: 8px;">Proposta de Investimento</h2>
+      <p style="color: var(--live-muted); max-width: 500px; margin: 0 auto 4px;">Diagnóstico MAPCA + Implementação de Processos + Estrutura Comercial B2B + Preparação para Certificação CA</p>
+      <div class="price"><span>R$</span>54.000</div>
+      <p style="color: var(--live-muted); font-size: 0.95rem; margin-bottom: 32px;">Cinquenta e quatro mil reais · 6 parcelas mensais com entrada de 20% no aceite</p>
+
+      <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; color: var(--live-muted); font-size: 0.95rem;">
+        <span>
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="15" style="display:inline; vertical-align: text-bottom; color: var(--live-neon); margin-right: 4px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          6 meses de acompanhamento
+        </span>
+        <span>
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="15" style="display:inline; vertical-align: text-bottom; color: var(--live-neon); margin-right: 4px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          20% de entrada · saldo flexível
+        </span>
+        <span>
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="15" style="display:inline; vertical-align: text-bottom; color: var(--live-neon); margin-right: 4px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Equipe especializada dedicada
+        </span>
+      </div>
+
+      <a href="contrato.html" target="_blank" class="btn btn-primary" style="font-size: 1.1rem; padding: 16px 40px;">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        Revisar & Assinar Contrato
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <img src="https://raw.githubusercontent.com/Clebito2/layout/main/Logo%20live%20oficial-36.png" class="logo" style="width: 100px; margin-bottom: 24px; opacity: 0.5;">
+    <p style="font-size: 0.92rem; margin-bottom: 6px;"><strong>Live Consultoria Empresarial</strong></p>
+    <p style="font-size: 0.82rem; color: var(--live-muted); margin-bottom: 6px;">Luiz Portal · luiz.portal@liveconsultoria.com</p>
+    <p style="font-size: 0.78rem; color: rgba(148,163,184,0.5); margin: 0;">Diagnóstico elaborado com base em 3 sessões de reunião presencial — Março de 2026</p>
+  </footer>
+
+</div>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationPlayState = 'running';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.fade-up').forEach(el => {
+    el.style.animationPlayState = 'paused';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
